@@ -38,13 +38,16 @@ def get_movies_by_category(category: str = Query(min_length=5, max_length=15)) -
     return JSONResponse(status_code=200, content=jsonable_encoder(result)) # Se envia como contenido en formato Json
 
 @movie_router.post('/movies', tags=['movies'], response_model=dict, status_code=201) #Metodo post para agregar peliculas
-def create_movie(movie: Movie) -> dict: #Con la clase Body se hace que los parámetros sean ingresados en el body de la url
+def create_movie(movie: List[Movie]) -> dict: #Con la clase Body se hace que los parámetros sean ingresados en el body de la url
     db = Session() # Se realiza la sesion con la base de datos
     # new_movie = MovieModel(**movie.dict()) # Se crea el objeto de la tabla con la clase MovieModel
     # db.add(new_movie) # Se añade la tabla a la base de datos
     # db.commit() # Se guarda los cambios en la bd
-    MovieService(db).create_movie(movie)
-    return JSONResponse(status_code=201, content={"message": "Se ha registrado la pelicula"})
+    for info in movie:
+        MovieService(db).create_movie(info)
+    if len(movie) == 1:
+        return JSONResponse(status_code=201, content={"message": "Se ha registrado la pelicula"})
+    return JSONResponse(status_code=201, content={"message": "Se han registrado las peliculas"})
 
 @movie_router.put('/movies/{id}', tags=['movies'], response_model=dict, status_code=200) #  Metodo put para actualizar datos en base a un id especifico requerido
 def update_movie(id: int, movie: Movie) -> dict:

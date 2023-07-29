@@ -1,6 +1,6 @@
 from models.movie import Movie as MovieModel#Importar la clase para el manejo de tablas de la base de datos
 from schemas.movie import Movie # Esquema creado para los datos de las pelis
-
+from typing import List
 # CLASE QUE SIRVE COMO SERVICIO
 class MovieService():
     def __init__(self, db) -> None: # Metodo constructor para que cada que se llame al servicio se le envie una sesión a la bd
